@@ -29,6 +29,7 @@ public class GameControllerScript : MonoBehaviour
     bool hold;
     bool released;
     GameObject firstball;
+    float swipingEdge = 25f;
 
     void Start()
     {
@@ -82,21 +83,26 @@ public class GameControllerScript : MonoBehaviour
 
     private void BallLaunching()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.mousePosition.y > swipingEdge)
         {
-            swipeFrom = Input.mousePosition;
-            hold = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            released = true;
-            hold = false;
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                swipeFrom = Input.mousePosition;
+                hold = true;
+
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                released = true;
+                hold = false;
+            }
         }
         if (hold)
         {
             arrowPointer.SetActive(true);
-            destination = ((Vector2)Input.mousePosition - swipeFrom).normalized * -1;
-            if (destination.y > 0) transform.up = destination;
+            Vector2 newDestination = ((Vector2)Input.mousePosition - swipeFrom).normalized * -1;
+            if (newDestination.y > 0.2) destination = newDestination;
+            if (destination.y > 0 ) transform.up = destination;
 
         }
         if (released)
